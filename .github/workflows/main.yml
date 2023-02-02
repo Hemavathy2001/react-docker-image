@@ -1,8 +1,8 @@
-name: ReactJs App
+name: ReactJs package
 
 on: 
   push: 
-    branches: ["main"]
+    branches: ["test"]
     
 jobs: 
   build: 
@@ -22,12 +22,21 @@ jobs:
           git --version
           echo Is build tools installed...?
           npm --version
-      - name: Build & push Docker image
-        uses: mr-smithers-excellent/docker-build-push@v5
+      - uses: actions/setup-node@v1
         with:
-          image: hrc1663/react-js-image
-          tags: latest
-          registry: docker.io
-          dockerfile: Dockerfile
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          node-version: 12
+          registry-url: https://npm.pkg.github.com/
+          scope: $USERNAME
+      - run: npm install
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.TOKEN}}
+#       - name: Build & push Docker image
+#         uses: mr-smithers-excellent/docker-build-push@v5
+#         with:
+#           image: hrc1663/react-js-image
+#           tags: latest
+#           registry: docker.io
+#           dockerfile: Dockerfile
+#           username: ${{ secrets.DOCKERHUB_USERNAME }}
+#           password: ${{ secrets.DOCKER_PASSWORD }}
